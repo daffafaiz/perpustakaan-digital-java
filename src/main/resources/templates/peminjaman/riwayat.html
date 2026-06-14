@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Riwayat Peminjaman')}"></head>
+<body>
+<div class="app">
+    <div th:replace="~{fragments/layout :: sidebar('riwayat')}"></div>
+    <div class="main">
+        <div th:replace="~{fragments/layout :: topbar('Riwayat Peminjaman')}"></div>
+        <main class="content">
+
+            <div class="page-header">
+                <div>
+                    <h1>Riwayat Peminjaman</h1>
+                    <p>Seluruh transaksi peminjaman, termasuk yang sudah dikembalikan.</p>
+                </div>
+            </div>
+
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+
+            <div class="table-wrap">
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Buku</th>
+                            <th>Anggota</th>
+                            <th>Tgl Pinjam</th>
+                            <th>Jatuh Tempo</th>
+                            <th>Tgl Kembali</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-end">Denda</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="p : ${daftarPeminjaman}">
+                            <td th:text="${p.id}">1</td>
+                            <td class="fw-semibold" th:text="${p.buku.judul}">Judul</td>
+                            <td th:text="${p.anggota.nama}">Nama</td>
+                            <td th:text="${#temporals.format(p.tanggalPinjam, 'dd MMM yyyy')}">-</td>
+                            <td th:text="${#temporals.format(p.tanggalJatuhTempo, 'dd MMM yyyy')}">-</td>
+                            <td th:text="${p.tanggalKembali != null ? #temporals.format(p.tanggalKembali, 'dd MMM yyyy') : '-'}">-</td>
+                            <td class="text-center">
+                                <span th:if="${p.status == STATUS_DIKEMBALIKAN}" class="badge-soft badge-success">Dikembalikan</span>
+                                <span th:unless="${p.status == STATUS_DIKEMBALIKAN}"
+                                      th:classappend="${p.terlambat} ? 'badge-danger' : 'badge-warning'"
+                                      class="badge-soft" th:text="${p.terlambat} ? 'Terlambat' : 'Dipinjam'">Dipinjam</span>
+                            </td>
+                            <td class="text-end"
+                                th:text="${p.denda != null and p.denda > 0} ? 'Rp ' + ${#numbers.formatInteger(p.denda, 1, 'POINT')} : '-'">-</td>
+                        </tr>
+                        <tr th:if="${daftarPeminjaman.isEmpty()}">
+                            <td colspan="8">
+                                <div class="empty-state">
+                                    <i class="bi bi-clock-history d-block mb-2"></i>
+                                    Belum ada riwayat peminjaman.
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

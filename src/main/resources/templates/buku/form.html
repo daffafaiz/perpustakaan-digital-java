@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Form Buku')}"></head>
+<body>
+<div class="app">
+    <div th:replace="~{fragments/layout :: sidebar('buku')}"></div>
+    <div class="main">
+        <div th:replace="~{fragments/layout :: topbar('Form Buku')}"></div>
+        <main class="content">
+
+            <div class="page-header">
+                <div>
+                    <h1 th:text="${mode == 'edit'} ? 'Edit Buku' : 'Tambah Buku'">Tambah Buku</h1>
+                    <p>Lengkapi informasi buku di bawah ini.</p>
+                </div>
+                <a th:href="@{/buku}" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left me-1"></i> Kembali
+                </a>
+            </div>
+
+            <div class="card-soft p-4" style="max-width: 760px;">
+                <form th:action="${mode == 'edit'} ? @{/buku/update/{id}(id=${buku.id})} : @{/buku/simpan}"
+                      th:object="${buku}" method="post" novalidate>
+
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label" for="judul">Judul Buku *</label>
+                            <input type="text" id="judul" class="form-control" th:field="*{judul}"
+                                   th:classappend="${#fields.hasErrors('judul')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('judul')}" th:errors="*{judul}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="pengarang">Pengarang *</label>
+                            <input type="text" id="pengarang" class="form-control" th:field="*{pengarang}"
+                                   th:classappend="${#fields.hasErrors('pengarang')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('pengarang')}" th:errors="*{pengarang}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="penerbit">Penerbit</label>
+                            <input type="text" id="penerbit" class="form-control" th:field="*{penerbit}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="kategori">Kategori *</label>
+                            <input type="text" id="kategori" class="form-control" th:field="*{kategori}"
+                                   list="kategoriList"
+                                   th:classappend="${#fields.hasErrors('kategori')} ? 'is-invalid'">
+                            <datalist id="kategoriList">
+                                <option value="Novel"></option>
+                                <option value="Teknologi"></option>
+                                <option value="Pengembangan Diri"></option>
+                                <option value="Sejarah"></option>
+                                <option value="Sains"></option>
+                            </datalist>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('kategori')}" th:errors="*{kategori}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="isbn">ISBN</label>
+                            <input type="text" id="isbn" class="form-control" th:field="*{isbn}"
+                                   th:classappend="${#fields.hasErrors('isbn')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="tahunTerbit">Tahun Terbit</label>
+                            <input type="number" id="tahunTerbit" class="form-control" th:field="*{tahunTerbit}"
+                                   min="0" max="2100">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="jumlahTotal">Jumlah Stok *</label>
+                            <input type="number" id="jumlahTotal" class="form-control" th:field="*{jumlahTotal}" min="0"
+                                   th:classappend="${#fields.hasErrors('jumlahTotal')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('jumlahTotal')}" th:errors="*{jumlahTotal}"></div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save me-1"></i> Simpan
+                        </button>
+                        <a th:href="@{/buku}" class="btn btn-outline-secondary">Batal</a>
+                    </div>
+                </form>
+            </div>
+
+        </main>
+    </div>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

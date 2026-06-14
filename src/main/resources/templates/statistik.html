@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Statistik')}"></head>
+<body>
+<div class="app">
+    <div th:replace="~{fragments/layout :: sidebar('statistik')}"></div>
+    <div class="main">
+        <div th:replace="~{fragments/layout :: topbar('Statistik Perpustakaan')}"></div>
+        <main class="content">
+
+            <div class="page-header">
+                <div>
+                    <h1>Statistik Perpustakaan</h1>
+                    <p>Analisis koleksi dan aktivitas peminjaman.</p>
+                </div>
+            </div>
+
+            <!-- Stat cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-xl-3">
+                    <div class="stat-card">
+                        <div class="stat-icon indigo"><i class="bi bi-journal-bookmark"></i></div>
+                        <div>
+                            <div class="stat-value" th:text="${statistik.jumlahBuku}">0</div>
+                            <div class="stat-label">Judul Buku</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-xl-3">
+                    <div class="stat-card">
+                        <div class="stat-icon sky"><i class="bi bi-stack"></i></div>
+                        <div>
+                            <div class="stat-value" th:text="${statistik.jumlahEksemplar}">0</div>
+                            <div class="stat-label">Total Eksemplar</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-xl-3">
+                    <div class="stat-card">
+                        <div class="stat-icon amber"><i class="bi bi-arrow-left-right"></i></div>
+                        <div>
+                            <div class="stat-value" th:text="${statistik.peminjamanAktif}">0</div>
+                            <div class="stat-label">Sedang Dipinjam</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-xl-3">
+                    <div class="stat-card">
+                        <div class="stat-icon rose"><i class="bi bi-cash-coin"></i></div>
+                        <div>
+                            <div class="stat-value" th:text="'Rp ' + ${#numbers.formatInteger(statistik.totalDenda, 1, 'POINT')}">Rp 0</div>
+                            <div class="stat-label">Total Denda</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-3">
+                <!-- Buku per kategori -->
+                <div class="col-12 col-lg-6">
+                    <div class="card-soft p-4 h-100">
+                        <h2 class="h6 fw-bold mb-3"><i class="bi bi-tags me-2"></i>Buku per Kategori</h2>
+                        <div th:if="${statistik.bukuPerKategori.isEmpty()}" class="empty-state py-3">
+                            <i class="bi bi-bar-chart"></i>
+                            <div>Belum ada data.</div>
+                        </div>
+                        <div th:each="e : ${statistik.bukuPerKategori}" class="mb-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span th:text="${e.key}">Kategori</span>
+                                <strong th:text="${e.value}">0</strong>
+                            </div>
+                            <div class="progress-thin">
+                                <div class="bar"
+                                     th:style="'width:' + ${statistik.jumlahBuku > 0 ? (e.value * 100 / statistik.jumlahBuku) : 0} + '%'"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buku terlaris -->
+                <div class="col-12 col-lg-6">
+                    <div class="card-soft p-4 h-100">
+                        <h2 class="h6 fw-bold mb-3"><i class="bi bi-trophy me-2"></i>Buku Paling Sering Dipinjam</h2>
+                        <div th:if="${statistik.bukuTerlaris.isEmpty()}" class="empty-state py-3">
+                            <i class="bi bi-trophy"></i>
+                            <div>Belum ada peminjaman.</div>
+                        </div>
+                        <ol class="list-group list-group-numbered" th:unless="${statistik.bukuTerlaris.isEmpty()}"
+                            style="--bs-list-group-bg: transparent;">
+                            <li th:each="e : ${statistik.bukuTerlaris}"
+                                class="list-group-item d-flex justify-content-between align-items-center"
+                                style="background: transparent; color: var(--text); border-color: var(--border);">
+                                <span th:text="${e.key}">Judul</span>
+                                <span class="badge-soft badge-info" th:text="${e.value} + 'x dipinjam'">0x</span>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

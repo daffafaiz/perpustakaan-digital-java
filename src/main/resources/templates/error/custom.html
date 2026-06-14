@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Error')}"></head>
+<body>
+<div class="login-wrapper">
+    <div class="text-center" style="max-width: 480px;">
+        <div style="font-size: 5rem; font-weight: 800; color: var(--primary);"
+             th:text="${statusCode} ?: 'Oops'">500</div>
+        <h1 class="h4 fw-bold mb-2">Terjadi Kesalahan</h1>
+        <p class="text-muted mb-4" th:text="${pesan} ?: 'Halaman tidak dapat ditampilkan.'">
+            Terjadi kesalahan.
+        </p>
+        <a th:href="@{/dashboard}" class="btn btn-primary">
+            <i class="bi bi-house me-1"></i> Kembali ke Dashboard
+        </a>
+    </div>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
